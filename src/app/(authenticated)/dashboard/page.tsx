@@ -307,21 +307,21 @@ export default function LibraryManagementSystem() {
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-xl font-semibold">Loan</h2>
-                  <p>Process member's loan</p>
+                  <p>Process members loan</p>
                 </div>
                 <BookOpen className="h-6 w-6" />
               </div>
             </CardHeader>
             <CardContent className="space-y-4 mt-4">
               <div>
-                <Label htmlFor="member_code">Member's barcode</Label>
+                <Label htmlFor="member_code">Members barcode</Label>
                 <div className="flex space-x-2">
                   <Input id="member_code" name="member_code" value={memberCodeDom} />
                   <Button onClick={searchMember}><Search className="h-4 w-4 mr-2" /> Search</Button>
                 </div>
               </div>
               <div>
-                <Label htmlFor="barcode">Book's barcode</Label>
+                <Label htmlFor="barcode">Books barcode</Label>
                 <div className="flex space-x-2">
                   <Input id="barcode" name="barcode"   value={bookCodeDom}/>
                   <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>

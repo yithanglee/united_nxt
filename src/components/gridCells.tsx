@@ -62,7 +62,7 @@ export default function IndexPage({ postFn: postFn }) {
                 let list = content!.split("\r\n")
                 let header = list.splice(0, 1)
                 let newDatas = [], newDatas2 = []
-                list.forEach((d: String, i: any) => {
+                list.forEach((d: string, i: any) => {
                     let newMap: Record<any, any> = {};
                     header[0].split(",").forEach((k: any, i: any) => {
                         newMap[k] = d.split(",")[i]
@@ -99,7 +99,7 @@ export default function IndexPage({ postFn: postFn }) {
 
         <div className="relative">
 
-            <p>You can copy paste from excel onto this page's excel. Download the csv first, then upload again, then save data.</p>
+            <p>You can copy paste from excel onto this pages excel. Download the csv first, then upload again, then save data.</p>
             <div className="my-4 space-x-2">
                 <Button onClick={handleDownloadCSV}>
                     <Download className="mr-2 h-4 w-4" />
