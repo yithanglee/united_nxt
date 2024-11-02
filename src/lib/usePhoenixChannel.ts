@@ -1,7 +1,7 @@
 // hooks/usePhoenixChannel.ts
 import { useState, useEffect } from 'react'
 import { Socket, Channel } from 'phoenix'
-import { PHX_ENDPOINT } from './constants'
+import { PHX_ENDPOINT, PHX_WS_PROTOCOL } from './constants'
 
 interface CountData {
     [key: string]: number
@@ -12,7 +12,7 @@ export function usePhoenixChannel() {
     const [isConnected, setIsConnected] = useState(false)
     const url = PHX_ENDPOINT
     useEffect(() => {
-        const socket = new Socket(`ws://${url}/socket`)
+        const socket = new Socket(`${PHX_WS_PROTOCOL}${url}/socket`)
         socket.connect()
 
         const channel = socket.channel('user:sidebar', {})

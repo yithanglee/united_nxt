@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { PHX_ENDPOINT, PHX_HTTP_PROTOCOL } from "@/lib/constants";
+import { PHX_ENDPOINT, PHX_HTTP_PROTOCOL, PHX_WS_PROTOCOL } from "@/lib/constants";
 import { JSONTree } from "react-json-tree";
 import { useToast } from "@/hooks/use-toast";
 import { genInputs } from "@/lib/svt_utils";
@@ -40,7 +40,7 @@ export default function SocketComponent() {
 
     useEffect(() => {
         // Initialize socket connection
-        const newSocket = new Socket(`ws://${url}/socket`)
+        const newSocket = new Socket(`${PHX_WS_PROTOCOL}${url}/socket`)
         newSocket.connect()
         setSocket(newSocket)
 
