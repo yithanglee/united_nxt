@@ -39,7 +39,7 @@ interface CustomCol {
     label: string
     hidden?: boolean
     value?: any
-    selection?: string
+    selection?: string | string[]
     customCols?: any
     search_queries?: string[]
     newData?: string
@@ -53,7 +53,7 @@ interface CustomCol {
 interface CustomSubCol {
   label: string;
   customCols?: CustomCol[] | null;
-  selection: string;
+  selection: string | string[];
   search_queries: string[];
   newData: string;
   title_key: string;
