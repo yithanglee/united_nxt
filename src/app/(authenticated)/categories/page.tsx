@@ -19,7 +19,7 @@ function hrefFn(data: any) {
         
       </div>
 
-      <DataTable 
+      <DataTable canDelete={true}
         showNew={true}
         model={'BookCategory'}
         preloads={['organization']}

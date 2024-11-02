@@ -33,7 +33,7 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                 showNew={true}
                 appendQueries={{ book_category_id: book_category_id }}
                 model={'BookInventory'}
-                preloads={['book', 'book_category', 'author', 'organization']}
+                preloads={['book', 'book_category', 'author', 'organization', 'book_images']}
                 search_queries={['b.name']}
                 // buttons={[{ name: 'Approve', onclickFn: approveFn }]}
                 customCols={
@@ -42,28 +42,15 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                             title: 'General',
                             list: [
                                 'id',
-                                //    {label:  'code', alt_name: 'Barcode'},
+                   
                                 'code',
                                 'book.title',
                                 'book.price',
-                                // {
-                                //     label: 'book.author_id',
-                                //     customCols: null,
-                                //     selection: 'Author',
-                                //     search_queries: ['a.name'],
-                                //     newData: 'name',
-                                //     title_key: 'name'
-                                // },
-                                // {
-                                //     label: 'publisher_id',
-                                //     customCols: null,
-                                //     selection: 'Publisher',
-                                //     search_queries: ['a.name'],
-                                //     newData: 'name',
-                                //     title_key: 'name'
-                                // },
+                             
                                 'book.isbn',
                                 'book.call_no',
+                                {label: 'update_assoc.book', hidden: true , value: "true"},
+                                {label: 'book_image.img_url', upload: true},
                                 {
                                     label: 'organization_id',
                                     customCols: null,
@@ -84,6 +71,8 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                     ]
                 }
                 columns={[
+                    { label: 'Cover', data: 'img_url', through: ['book_images'], showImg: true },
+                    { label: 'Barcode', data: 'code' },
                     { label: 'Title', data: 'title', through: ['book'] },
                     { label: 'Category', data: 'name', through: ['book_category'] },
                     { label: 'Price', data: 'price', through: ['book'] },

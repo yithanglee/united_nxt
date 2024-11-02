@@ -24,6 +24,14 @@ export default function MembersPage() {
               list: [
                 'id', 'server', 'hostname', 'username', 'password',
                 {
+                  label: 'adapter_type',
+                  // customCols: null,
+                  selection: ['smtp', 'sendgrid', 'local'],
+                  // search_queries: ['a.name'],
+                  // newData: 'name',
+                  // title_key: 'name'
+                },
+                {
                   label: 'organization_id',
                   customCols: null,
                   selection: 'Organization',
@@ -44,6 +52,7 @@ export default function MembersPage() {
         }
         columns={[
           { label: 'Organization', data: 'name', through: ['organization'] },
+          { label: 'Adapter', data: 'adapter_type' },
           { label: 'Server', data: 'server' },
           { label: 'hostname', data: 'hostname' },
           { label: 'Username', data: 'username' },

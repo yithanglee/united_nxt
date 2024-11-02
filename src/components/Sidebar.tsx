@@ -44,7 +44,8 @@ import {
   LibraryBig,
   CloudUpload,
   FileScan,
-  FileClock
+  FileClock,
+  ChartBar
 } from 'lucide-react'
 import { usePhoenixChannel } from '@/lib/usePhoenixChannel'
 
@@ -64,7 +65,7 @@ const navGroups: NavGroup[] = [
     name: "Dashboard",
     items: [
       { name: "Overview", href: "/dashboard", icon: Home },
-
+      { name: "Statistic", href: "/statistic", icon: ChartBar },
       { name: "Loans", href: "/loans", icon: LibraryBig },
       { name: "History", href: "/loans/history", icon: FileClock },
     ]

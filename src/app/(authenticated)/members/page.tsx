@@ -14,7 +14,7 @@ export default function MembersPage() {
       <DataTable canDelete={true}
         showNew={true}
         model={'Member'}
-        preloads={['organization']}
+        preloads={['organization','group']}
         search_queries={['a.name']}
         customCols={
           [
@@ -26,6 +26,14 @@ export default function MembersPage() {
                 'username',
                 'email',
                 'phone', 'username', 'password',
+                {
+                  label: 'group_id',
+                  customCols: null,
+                  selection: 'Group',
+                  search_queries: ['a.name'],
+                  newData: 'name',
+                  title_key: 'name'
+                },
                 {
                   label: 'organization_id',
                   customCols: null,
@@ -47,6 +55,7 @@ export default function MembersPage() {
         }
         columns={[
           { label: 'Organization', data: 'name', through: ['organization'] },
+          { label: 'Group', data: 'name', through: ['group'] },
           { label: 'Member Code', data: 'code', subtitle: {label: 'psid', data: 'psid'} },
           { label: 'Name', data: 'name' },
           { label: 'Username', data: 'username' },
