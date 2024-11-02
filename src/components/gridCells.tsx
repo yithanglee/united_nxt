@@ -18,7 +18,7 @@ export default function IndexPage({ postFn: postFn }) {
     const [spreadsheet, setSpreadsheet] = useState(null)
     const fileInputRef = useRef(null)
 
-    var l = ["SEQ", "TITLE", "BARCODE", "ISBN", "AUTHOR",
+    let l = ["SEQ", "TITLE", "BARCODE", "ISBN", "AUTHOR",
         "PUBLISHER", "DESCRIPTION", "CALL NO", "PRICE"]
     useEffect(() => {
         if (!jRef.current!.jexcel) {
@@ -59,11 +59,11 @@ export default function IndexPage({ postFn: postFn }) {
             const reader = new FileReader()
             reader.onload = (e) => {
                 const content = e.target?.result
-                var list = content!.split("\r\n")
-                var header = list.splice(0, 1)
-                var newDatas = [], newDatas2 = []
+                let list = content!.split("\r\n")
+                let header = list.splice(0, 1)
+                let newDatas = [], newDatas2 = []
                 list.forEach((d: String, i: any) => {
-                    var newMap: Record<any, any> = {};
+                    let newMap: Record<any, any> = {};
                     header[0].split(",").forEach((k: any, i: any) => {
                         newMap[k] = d.split(",")[i]
                     })
@@ -84,7 +84,7 @@ export default function IndexPage({ postFn: postFn }) {
 
     async function handleSaveData(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
         if (spreadsheet) {
-            var res = await postData({
+            let res = await postData({
                 data: { books: dataMap, organization_id: user?.userStruct?.organization_id },
                 endpoint: `${url}/svt_api/webhook?scope=upload_csv_books`
             })
@@ -126,11 +126,11 @@ export default function IndexPage({ postFn: postFn }) {
     );
 }
 function makeid(arg0: number) {
-    var result = "";
-    var characters =
+    let result = "";
+    let characters =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
+        let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;

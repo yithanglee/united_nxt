@@ -51,7 +51,7 @@ export default function DynamicDropdown({
   const tryPost = async () => {
     const newFormData = { [newData]: query }
     const map = { [module]: { ...newFormData, id: '0' } }
-    var url = `${cac_url}/svt_api/${module}`
+    let url = `${cac_url}/svt_api/${module}`
     try {
 
 

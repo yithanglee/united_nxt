@@ -479,7 +479,7 @@ export default function DataTable({
     }
     if (column.showJson) {
 
-      var theme = {
+      let theme = {
         scheme: 'bright',
         author: 'chris kempson (http://chriskempson.com)',
         base00: '#000000',

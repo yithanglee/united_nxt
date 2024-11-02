@@ -49,7 +49,7 @@ const DynamicInput: React.FC<DynamicInputProps> = ({ input, keyName, module, dat
   let value = data[inputKey];
 
   if (inputKey.includes(".")) {
-    var inputKeys = inputKey.split(".")
+    let inputKeys = inputKey.split(".")
     try {
       value = data[inputKeys[0]][inputKeys[1]]
     } catch(e){
@@ -64,7 +64,7 @@ const DynamicInput: React.FC<DynamicInputProps> = ({ input, keyName, module, dat
 
     if (key.includes(".")) {
 
-      var subkeys = key.split(".")
+      let subkeys = key.split(".")
 
 
       return `${module}[${subkeys[0]}][${subkeys[1]}]`
