@@ -1,6 +1,11 @@
 // API and Endpoint Configuration
-export const PHX_HTTP_PROTOCOL = process.env.PHX_HTTP_PROTOCOL || 'http://';  // Default to 'http' if not set
-export const PHX_ENDPOINT = process.env.PHX_ENDPOINT || 'localhost:4009';  // Default to localhost if not set
+
+// export const PHX_HTTP_PROTOCOL = process.env.PHX_HTTP_PROTOCOL || 'http://';  
+// export const PHX_ENDPOINT = process.env.PHX_ENDPOINT || 'localhost:4009';  
+// export const PHX_WS_PROTOCOL = process.env.PHX_WS_PROTOCOL || 'ws://';  // Default to 'http' if not set
+export const PHX_HTTP_PROTOCOL = process.env.PHX_HTTP_PROTOCOL || 'https://';  // Default to 'http' if not set
+export const PHX_WS_PROTOCOL = process.env.PHX_WS_PROTOCOL || 'wss://';  // Default to 'http' if not set
+export const PHX_ENDPOINT = process.env.PHX_ENDPOINT || 'library.pioneercommunity.org.my';  // Default to localhost if not set
 
 // Cookie Names
 export const PHX_COOKIE = 'united-v3';  // Could make this environment-dependent if necessary
