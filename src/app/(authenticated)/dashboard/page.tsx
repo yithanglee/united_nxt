@@ -12,6 +12,7 @@ import { PHX_ENDPOINT, PHX_HTTP_PROTOCOL } from '@/lib/constants'
 import { postData } from '@/lib/svt_utils'
 import DataTable from '@/components/data/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
 interface Member {
   id: number;
   name: string;
@@ -76,7 +77,7 @@ export default function LibraryManagementSystem() {
 
   const { toast } = useToast()
   const url = `${PHX_HTTP_PROTOCOL}/${PHX_ENDPOINT}`
-  const setBookCodeBtn =  async function (e: any) {
+  const setBookCodeBtn = async function (e: any) {
     console.log(e.code)
     setBookCode(e.code)
 
@@ -86,7 +87,14 @@ export default function LibraryManagementSystem() {
     setMemberCode(e.code)
 
   }
+  const handleBookInputChange = (key: string, value: string) => {
 
+    setBookCode(value)
+  };
+  const handleMemberInputChange = (key: string, value: string) => {
+
+    setMemberCode(value)
+  };
   const searchMember = useCallback(async () => {
     const memberCode = document.querySelector<HTMLInputElement>('input[name="member_code"]')?.value
     if (!memberCode) {
@@ -299,6 +307,7 @@ export default function LibraryManagementSystem() {
 
   return (
     <div className="container mx-auto p-4">
+   
       <div>
         <h1 className="text-2xl font-bold mb-6">Library Management System</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -316,14 +325,21 @@ export default function LibraryManagementSystem() {
               <div>
                 <Label htmlFor="member_code">Members barcode</Label>
                 <div className="flex space-x-2">
-                  <Input id="member_code" name="member_code" value={memberCodeDom} />
+                  <Input id="member_code" name="member_code" value={memberCodeDom} 
+                  
+                  onChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
+                  />
                   <Button onClick={searchMember}><Search className="h-4 w-4 mr-2" /> Search</Button>
                 </div>
               </div>
               <div>
                 <Label htmlFor="barcode">Books barcode</Label>
                 <div className="flex space-x-2">
-                  <Input id="barcode" name="barcode"   value={bookCodeDom}/>
+                  <Input id="barcode" name="barcode" value={bookCodeDom} 
+                  
+                  
+                  onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
+                  />
                   <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
                 </div>
               </div>
@@ -458,7 +474,8 @@ export default function LibraryManagementSystem() {
                 <h2 className="text-2xl font-semibold">Member Management</h2>
               </CardHeader>
               <CardContent>
-                <DataTable 
+                <DataTable
+                modelPath=''
                   model={'Member'}
                   preloads={['organization', 'group']}
                   buttons={[{ name: 'Use', onclickFn: setMemberCodeBtn }]}
@@ -468,7 +485,7 @@ export default function LibraryManagementSystem() {
                       title: 'General',
                       list: [
                         'id', 'name', 'username', 'email',
-                        {label: 'is_approved', boolean: true},
+                        { label: 'is_approved', boolean: true },
                         'phone', 'username', 'password',
                         {
                           label: 'group_id',
@@ -518,10 +535,12 @@ export default function LibraryManagementSystem() {
                 <h2 className="text-2xl font-semibold">Book Inventory</h2>
               </CardHeader>
               <CardContent>
-                <DataTable 
+                <DataTable
+                  modelPath=''
+                  itemsPerPage={10}
                   model={'BookInventory'}
                   preloads={['book', 'book_category', 'author', 'organization', 'book_images']}
-                  join_statements={[{book: 'book'}]}
+                  join_statements={[{ book: 'book' }]}
                   search_queries={['a.code|b.title']}
                   buttons={[{ name: 'Use', onclickFn: setBookCodeBtn }]}
                   customCols={[
@@ -529,8 +548,8 @@ export default function LibraryManagementSystem() {
                       title: 'General',
                       list: [
                         'id', 'code', 'book.title', 'book.price', 'book.isbn', 'book.call_no',
-                        {label: 'update_assoc.book', hidden: true , value: "true"},
-                        {label: 'book_image.img_url', upload: true},
+                        { label: 'update_assoc.book', hidden: true, value: "true" },
+                        { label: 'book_image.img_url', upload: true },
                         {
                           label: 'organization_id',
                           customCols: null,

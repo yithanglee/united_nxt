@@ -29,23 +29,18 @@ import {
   ListCollapseIcon,
   WifiIcon,
   WifiOffIcon,
-  BookOpen,
-  Building,
-  Building2,
-  FolderOpen,
-  Home,
+  Box,
+  CreditCard,
+  DollarSign,
   LogOut,
-  Mail,
+  MapPin,
+  Megaphone,
+  Package,
+  Scale,
   Settings,
-  ShieldCheck,
+  ShoppingBag,
   Tag,
-  UserPlus,
-  Users,
-  LibraryBig,
-  CloudUpload,
-  FileScan,
-  FileClock,
-  ChartBar
+  Users
 } from 'lucide-react'
 import { usePhoenixChannel } from '@/lib/usePhoenixChannel'
 
@@ -60,48 +55,74 @@ interface NavGroup {
   name: string
   items: NavItem[]
 }
-const navGroups: NavGroup[] = [
+
+
+const defaultNavGroups: NavGroup[] = [
   {
     name: "Dashboard",
     items: [
-      { name: "Overview", href: "/dashboard", icon: Home },
-      { name: "Statistic", href: "/statistic", icon: ChartBar },
-      { name: "Loans", href: "/loans", icon: LibraryBig },
-      { name: "History", href: "/loans/history", icon: FileClock },
+      { name: "Overview", href: "/dashboard", icon: HomeIcon },
     ]
   },
   {
-    name: "Books",
+    name: "Sellers",
     items: [
-      { name: "Books", href: "/books", icon: BookOpen },
-      { name: "Authors", href: "/authors", icon: Users },
-      { name: "Publishers", href: "/publishers", icon: Building },
-      { name: "Tags", href: "/tags", icon: Tag },
-      { name: "Categories", href: "/categories", icon: FolderOpen },
-      { name: "Scan", href: "/scan", icon: FileScan },
-      { name: "Upload", href: "/upload", icon: CloudUpload },
+      { name: "Sellers", href: "/sellers", icon: Users, countKey: "total_sellers" },
+      { name: "Membership Packages", href: "/membership_packages", icon: Package },
+      { name: "Payments", href: "/payments", icon: CreditCard },
+      { name: "Paid Memberships", href: "/paid_memberships", icon: ShoppingBag },
     ]
   },
   {
-    name: "Members",
+    name: "Buyers",
     items: [
-      { name: "Organizations", href: "/organizations", icon: Building2 },
-      { name: "Email Settings", href: "/smtp_settings", icon: Mail },
-      { name: "Admins", href: "/users", icon: ShieldCheck },
-      { name: "Members", href: "/members", icon: Users },
-      { name: "Groups", href: "/groups", icon: UserPlus },
+      { name: "Buyers", href: "/buyers", icon: Users },
+
+    ]
+  },
+  {
+    name: "Products",
+    items: [
+      { name: "Brands", href: "/brands", icon: Box },
+      { name: "Categories", href: "/categories", icon: Box },
+      { name: "Products", href: "/products", icon: Box },
+      { name: "Variants", href: "/variants", icon: Tag },
+      { name: "Unit of Measurement", href: "/unit_measurements", icon: Scale },
+      { name: "Price Groups", href: "/price_groups", icon: DollarSign },
+    ]
+  },
+  {
+    name: "Operations",
+    items: [
+      { name: "Locations", href: "/locations", icon: MapPin },
+      { name: "Marketing Campaigns", href: "/marketing_campaigns", icon: Megaphone },
+      { name: "Marketing Banners", href: "/marketing_banners", icon: Megaphone },
+      { name: "Participating Products", href: "/marketing_banner_products", icon: Megaphone },
+      { name: "Staffs", href: "/staffs", icon: Users },
     ]
   },
   {
     name: "System",
     items: [
       { name: "Settings", href: "/settings", icon: Settings },
+      { name: "Banner Positions", href: "/banner_positions", icon: Settings },
+      { name: "Roles", href: "/roles", icon: Settings },
+      { name: "App Routes", href: "/app_routes", icon: Settings },
       { name: "Logout", href: "/login", icon: LogOut },
     ]
   }
 ]
 
-export default function Sidebar() {
+interface NavGroupProps{
+  sidebarTitle: string 
+  navGroups: NavGroup[]
+}
+
+export default function Sidebar({
+sidebarTitle= 'Next Admin',
+  navGroups = defaultNavGroups,
+
+}: NavGroupProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [collapsedGroups, setCollapsedGroups] = useState<string[]>([])
   const pathname = usePathname()
@@ -137,11 +158,11 @@ export default function Sidebar() {
       isSidebarCollapsed ? "w-16" : "w-64"
     )}>
       <div className="p-4 flex justify-between items-center">
-        {!isSidebarCollapsed && <h1 className="text-2xl font-bold text-gray-800">United v3 Admin</h1>}
+        {!isSidebarCollapsed && <h1 className="text-2xl font-bold text-gray-800">{sidebarTitle}</h1>}
         <div className="flex space-x-2 items-center">
           {!isSidebarCollapsed && (
             <>
-
+              
               {isConnected ? (
                 <WifiIcon className="h-4 w-4 text-green-500" />
               ) : (

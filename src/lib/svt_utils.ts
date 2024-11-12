@@ -1,7 +1,6 @@
 // You may need to install js-cookie if not already in your project
 import Cookies from 'js-cookie';
 import { PHX_HTTP_PROTOCOL, PHX_ENDPOINT, PHX_COOKIE } from '../lib/constants';
-
 interface PostDataOptions {
     data?: any;
     method?: string;
@@ -18,10 +17,8 @@ export async function postData(postDataOptions: PostDataOptions = {}) {
         isFormData = false,
         successCallback
     } = postDataOptions;
-
-  
     let res;
-    let cookieToken = Cookies.get(PHX_COOKIE);
+    let cookieToken = Cookies.get(PHX_COOKIE!);
     let token = cookieToken != null ? cookieToken : 'empty';
 
     let headers: Record<string, string> = {
@@ -45,7 +42,7 @@ export async function postData(postDataOptions: PostDataOptions = {}) {
         const response = await fetch(endpoint || (PHX_HTTP_PROTOCOL + PHX_ENDPOINT), requestOptions);
 
         if (response.status === 403) {
-            Cookies.remove(PHX_COOKIE);
+            Cookies.remove(PHX_COOKIE!);
             //   goto("/");
             return;
         }
@@ -56,24 +53,23 @@ export async function postData(postDataOptions: PostDataOptions = {}) {
 
             if (res.status) {
                 if (res.status === "ok") {
-
-                   
+                    //   get(isToastOpen).notify("Submitted successfully!");
                 } else if (res.status === "error" && res.reason) {
-                    
+                    //   get(isToastOpen).notify("Error! " + res.reason);
                 }
             } else {
-             
+                // get(isToastOpen).notify("Submitted successfully!");
             }
 
             if (successCallback) {
                 successCallback();
             }
         } else {
-         
+            //   get(isToastOpen).notify("Not Submitted!");
         }
     } catch (error) {
         console.error(error);
-       
+        // get(isToastOpen).notify("Error!");
     }
 
     return res;

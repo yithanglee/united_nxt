@@ -1,14 +1,13 @@
 // API and Endpoint Configuration
-
 // export const PHX_HTTP_PROTOCOL = process.env.PHX_HTTP_PROTOCOL || 'http://';  
-// export const PHX_ENDPOINT = process.env.PHX_ENDPOINT || 'localhost:4009';  
+// export const PHX_ENDPOINT = process.env.PHX_ENDPOINT || 'localhost:4000';  
 // export const PHX_WS_PROTOCOL = process.env.PHX_WS_PROTOCOL || 'ws://';  // Default to 'http' if not set
-export const PHX_HTTP_PROTOCOL = process.env.PHX_HTTP_PROTOCOL || 'https://';  // Default to 'http' if not set
-export const PHX_WS_PROTOCOL = process.env.PHX_WS_PROTOCOL || 'wss://';  // Default to 'http' if not set
-export const PHX_ENDPOINT = process.env.PHX_ENDPOINT || 'library.pioneercommunity.org.my';  // Default to localhost if not set
+export const PHX_HTTP_PROTOCOL = process.env.NEXT_PUBLIC_HTTP_PROTOCOL || 'https://';  // Default to 'http' if not set
+export const PHX_WS_PROTOCOL = process.env.NEXT_PUBLIC_WS_PROTOCOL || 'wss://';  // Default to 'http' if not set
+export const PHX_ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT 
 
 // Cookie Names
-export const PHX_COOKIE = 'united-v3';  // Could make this environment-dependent if necessary
+export const PHX_COOKIE = process.env.NEXT_PUBLIC_COOKIE;  // Could make this environment-dependent if necessary
 
 // Other Constants
 export const API_VERSION = process.env.API_VERSION || 'v1';

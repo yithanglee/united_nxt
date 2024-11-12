@@ -5,31 +5,25 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
 
-const data = [
-  { count: 0, month: "JAN" },
-  { count: 0, month: "FEB" },
-  { count: 0, month: "MAR" },
-  { count: 11, month: "APR" },
-  { count: 29, month: "MAY" },
-  { count: 2, month: "JUN" },
-  { count: 1, month: "JUL" },
-  { count: 1, month: "AUG" },
-  { count: 0, month: "SEP" },
-  { count: 0, month: "OCT" },
-  { count: 0, month: "NOV" },
-  { count: 0, month: "DEC" }
-]
 
-export default function MemberJoinChart() {
+type Data = Record<any, any>[];
+interface MemberJoinChartProps {
+    data: Data;
+    year: string ;
+    title: string;
+    subtitle: string;
+}
+const MemberJoinChart: React.FC<MemberJoinChartProps> = ({ data, year , title, subtitle}) => {
+
   if (!data || data.length === 0) {
     return <div>No data available</div>
   }
 
   return (
-    <Card className="w-full max-w-3xl">
+    <Card className=" col-span-6 lg:col-span-3">
       <CardHeader>
-        <CardTitle>Member Joins by Month (2024)</CardTitle>
-        <CardDescription>Number of new members joining each month</CardDescription>
+        <CardTitle>{title} ({year})</CardTitle>
+        <CardDescription>{subtitle}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer
@@ -39,7 +33,7 @@ export default function MemberJoinChart() {
               color: "hsl(var(--chart-1))",
             },
           }}
-          className="h-[300px]"
+          className="h-[120px] w-full"
         >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data}>
@@ -47,7 +41,7 @@ export default function MemberJoinChart() {
                 dataKey="month"
                 stroke="#888888"
                 fontSize={12}
-                tickLine={false}
+                tickLine={true}
                 axisLine={false}
               />
               <YAxis
@@ -71,3 +65,4 @@ export default function MemberJoinChart() {
     </Card>
   )
 }
+export default MemberJoinChart;

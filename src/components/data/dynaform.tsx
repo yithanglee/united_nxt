@@ -46,7 +46,7 @@ const DynamicInput: React.FC<DynamicInputProps> = ({ input, keyName, module, dat
 
   const key = typeof keyName === 'string' ? { label: keyName } : keyName
   const inputKey = input?.key || (typeof keyName === 'string' ? keyName : keyName.label)
-  let value = data[inputKey];
+  let value = data ? data[inputKey] :  '';
 
   if (inputKey.includes(".")) {
     let inputKeys = inputKey.split(".")
@@ -107,7 +107,22 @@ const DynamicInput: React.FC<DynamicInputProps> = ({ input, keyName, module, dat
       </div>
     )
   }
-
+  if (key.date) {
+    return (
+      <div className="w-full sm:w-1/3 mx-4 my-2">
+        <Label className="space-y-2">
+          <span className="capitalize">{altName}</span>
+          <Input
+            type="date"
+          
+            name={inputName(inputKey)}
+            value={value || ''}
+            onChange={(e) => handleChange(e.target.value)}
+          />
+        </Label>
+      </div>
+    )
+  }
   if (key.numeric) {
     return (
       <div className="w-full sm:w-1/3 mx-4 my-2">

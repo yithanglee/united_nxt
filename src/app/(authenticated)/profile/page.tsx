@@ -31,7 +31,7 @@ export default function PaymentsPage() {
             </div>
             <div className="grid grid-cols-8">
                 <div className="col-span-2" />
-                <div className="col-span-4">
+                <div className="col-span-12 lg:col-span-4">
                     <DynamicForm data={user?.userStruct} inputs={colInputs} customCols={[
 
                         {

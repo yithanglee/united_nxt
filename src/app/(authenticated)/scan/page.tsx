@@ -30,8 +30,8 @@ export default function SocketComponent() {
         const fetchColInputs = async () => {
             const inputs = await genInputs(web_url, 'BookInventory');
             console.log(inputs)
-        
-            inputs.push({key: 'update_assoc', value: 'string'})
+
+            inputs.push({ key: 'update_assoc', value: 'string' })
             setColInputs(inputs);
         };
         fetchColInputs();
@@ -89,7 +89,7 @@ export default function SocketComponent() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="lg:space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-3xl font-bold tracking-tight">Scan Book Image</h2>
 
@@ -98,8 +98,7 @@ export default function SocketComponent() {
             <Button onClick={handleReconnect} className="mb-4">Reconnect Socket</Button>
 
             <div className="grid grid-cols-8 gap-4">
-                <div className="col-span-3">
-                    {/* Properly structure the conditional rendering */}
+                <div className="col-span-12 lg:col-span-4">
                     {!isLoading ? (
                         <DynamicForm
                             data={{ scope: "scan_image" }}
@@ -131,52 +130,7 @@ export default function SocketComponent() {
                         <p>Loading...</p> // Optionally, you can show a loading message or spinner
                     )}
 
-
-                    <DynamicForm
-                        data={{ id: "0" }}
-                        inputs={colInputs }
-                    
-                        customCols={[
-                            {
-                                title: 'New Book',
-                                list: [
-                                    'id',
-                   
-                                    'code',
-                                    'book.title',
-                                    'book.price',
-                                 
-                                    'book.isbn',
-                                    'book.call_no',
-                                    'author.name',
-                                    'publisher.name',
-                                    {label: 'update_assoc.book', data: 'update_assoc.book', hidden: true , value: "true"},
-                                    {label: 'update_assoc.book_category', data: 'update_assoc.book_category', hidden: true , value: "true"},
-                                    // {label: 'update_assoc', data: 'update_assoc.author', hidden: true , value: "true"},
-                                    // {label: 'update_assoc', data: 'update_assoc.publisher', hidden: true , value: "true"}
-                                   
-
-                                ]
-
-                            }
-                        ]}
-                        module={'BookInventory'}
-                        postFn={() => {
-
-
-                            toast({
-                                title: "Action Completed",
-                                description: "Your action was successful!",
-                            })
-
-                        }}
-                    />
-                </div>
-
-                <div className="col-span-1"></div>
-
-                <div className="col-span-4">
-                    <Card>
+                    <Card className="mt-12">
                         <CardContent>
                             <h2 className="text-xl font-semibold mb-2 mt-4">Received Image</h2>
                             {imageData ? (
@@ -211,6 +165,53 @@ export default function SocketComponent() {
                         </CardContent>
                     </Card>
                 </div>
+                <div className="col-span-12 lg:col-span-3">
+
+
+                    <DynamicForm
+                        data={{ id: "0" }}
+                        inputs={colInputs}
+
+                        customCols={[
+                            {
+                                title: 'New Book',
+                                list: [
+                                    'id',
+
+                                    'code',
+                                    'book.title',
+                                    'book.price',
+
+                                    'book.isbn',
+                                    'book.call_no',
+                                    'author.name',
+                                    'publisher.name',
+                                    { label: 'update_assoc.book', data: 'update_assoc.book', hidden: true, value: "true" },
+                                    { label: 'update_assoc.book_category', data: 'update_assoc.book_category', hidden: true, value: "true" },
+                                    // {label: 'update_assoc', data: 'update_assoc.author', hidden: true , value: "true"},
+                                    // {label: 'update_assoc', data: 'update_assoc.publisher', hidden: true , value: "true"}
+
+
+                                ]
+
+                            }
+                        ]}
+                        module={'BookInventory'}
+                        postFn={() => {
+
+
+                            toast({
+                                title: "Action Completed",
+                                description: "Your action was successful!",
+                            })
+
+                        }}
+                    />
+                </div>
+
+
+
+
             </div>
         </div>
     );

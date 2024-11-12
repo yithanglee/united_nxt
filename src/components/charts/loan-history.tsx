@@ -18,27 +18,7 @@ interface CategoryData {
   data: LoanData[]
 }
 
-const rawData: CategoryData[] = [
-  {
-    "category": "儿童/育儿类书籍",
-    "code": "A1",
-    "data": [
-      { "count": 0, "month": "JAN" },
-      { "count": 0, "month": "FEB" },
-      { "count": 0, "month": "MAR" },
-      { "count": 0, "month": "APR" },
-      { "count": 0, "month": "MAY" },
-      { "count": 0, "month": "JUN" },
-      { "count": 0, "month": "JUL" },
-      { "count": 0, "month": "AUG" },
-      { "count": 0, "month": "SEP" },
-      { "count": 0, "month": "OCT" },
-      { "count": 0, "month": "NOV" },
-      { "count": 0, "month": "DEC" }
-    ]
-  },
-  // ... (include all other categories here)
-]
+
 
 const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
@@ -53,10 +33,19 @@ const processData = (data: CategoryData[]) => {
   })
 }
 
-const chartData = processData(rawData)
 
-export default function LoanHistoryChart() {
-  const [activeCategories, setActiveCategories] = useState<string[]>(rawData.map(c => c.code))
+
+
+interface LoanHistoryChartProps {
+    data: CategoryData[];
+    year: string ;
+    title: string;
+    subtitle: string;
+}
+
+const LoanHistoryChart: React.FC<LoanHistoryChartProps> = ({ data, year, title, subtitle }) => {
+  const chartData = processData(data)
+  const [activeCategories, setActiveCategories] = useState<string[]>(data.map(c => c.code))
 
   const handleCategoryToggle = (code: string) => {
     setActiveCategories(prev =>
@@ -75,15 +64,15 @@ export default function LoanHistoryChart() {
   return (
     <Card className="w-full mx-auto">
       <CardHeader>
-        <CardTitle>Loan History by Category (2024)</CardTitle>
-        <CardDescription>Number of loans per category each month</CardDescription>
+        <CardTitle>{title} ({year})</CardTitle>
+        <CardDescription>{subtitle}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-1/4">
+          <div className="w-full lg:w-1/4">
             <h3 className="text-lg font-semibold mb-2">Categories</h3>
-            <ScrollArea className="h-[400px] md:h-[600px]">
-              {rawData.map(category => (
+            <ScrollArea className="h-[240px]">
+              {data.map(category => (
                 <div key={category.code} className="flex items-center space-x-2 mb-2">
                   <Checkbox
                     id={category.code}
@@ -100,8 +89,8 @@ export default function LoanHistoryChart() {
               ))}
             </ScrollArea>
           </div>
-          <div className="w-full md:w-3/4">
-            <ChartContainer className="h-[400px] md:h-[600px]" config={{
+          <div className="w-full lg:w-3/4">
+            <ChartContainer className="h-[240px] w-full" config={{
               count: {
                 label: "Loan by categories",
                 color: "hsl(var(--chart-1))",
@@ -130,3 +119,5 @@ export default function LoanHistoryChart() {
     </Card>
   )
 }
+
+export default LoanHistoryChart;
