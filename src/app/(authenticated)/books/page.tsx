@@ -15,6 +15,7 @@ export default function SellersPage() {
       <DataTable canDelete={true}
         showNew={true}
         model={'Book'}
+        itemsPerPage={20}
         preloads={['organization', 'author', 'publisher', 'book_images']}
         join_statements={[{ author: 'author' }]}
         search_queries={['a.title|b.name']}
