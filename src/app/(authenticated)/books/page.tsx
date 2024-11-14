@@ -1,74 +1,93 @@
+'use client';
 import DataTable from "@/components/data/table"
+import { useEffect, useState } from "react";
 
-
-export default function SellersPage() {
-
-  // This is a placeholder for future implementation
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold tracking-tight">Books</h2>
-
-      </div>
-
-      <DataTable canDelete={true}
-        showNew={true}
-        model={'Book'}
-        itemsPerPage={20}
-        preloads={['organization', 'author', 'publisher', 'book_images']}
-        join_statements={[{ author: 'author' }]}
-        search_queries={['a.title|b.name']}
-        customCols={
-          [
-            {
-              title: 'General',
-              list: [
-                'id',
-                'title',
-                { label: 'book_image.img_url', upload: true },
-                {
-                  label: 'author_id',
-                  customCols: null,
-                  selection: 'Author',
-                  search_queries: ['a.name'],
-                  newData: 'name',
-                  title_key: 'name'
-                },
-
-                {
-                  label: 'publisher_id',
-                  customCols: null,
-                  selection: 'Publisher',
-                  search_queries: ['a.name'],
-                  newData: 'name',
-                  title_key: 'name'
-                },
-
-              ]
-            },
-            {
-              title: 'Detail',
-              list: [
-
-              ]
-            },
-          ]
+export default function PaymentsPage({ params }: { params: { book_category_id: string } }) {
+    const [data, setData] = useState<any[]>([]);
+    console.log(data)
+    const book_category_id = params.book_category_id
+    // Load data from localStorage when the component mounts
+    useEffect(() => {
+        const storedData = localStorage.getItem('modelData');  // Replace 'modelData' with your key
+        if (storedData) {
+            setData(JSON.parse(storedData));  // Parse and set the data in state
         }
-        columns={[
-          { label: 'Organization', data: 'name', through: ['organization'] },
-          { label: 'Cover', data: 'img_url', through: ['book_images'], showPreview: true },
-          { label: 'Title', data: 'title', altClass: 'pt-2' },
-          { label: 'Publisher', data: 'name', through: ['publisher'], altClass: 'text-xs ' },
-          { label: 'Author', data: 'name', through: ['author'], altClass: 'text-xs ' },
-          { label: 'ISBN', data: 'isbn', altClass: 'text-sm' },
-          { label: 'Call No', data: 'call_no', altClass: 'text-sm' },
+    }, []);
+    // This is a placeholder for future implementation
 
-          { label: 'Price', data: 'price' },
-        ]}
+    function approveFn(data: any) {
+        console.log(data)
+        return null;
+    }
 
 
-      />
-    </div>
-  )
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-bold tracking-tight">Inventories</h2>
+
+            </div>
+
+
+            <DataTable canDelete={true}
+                showNew={true}
+                // appendQueries={{ book_category_id: book_category_id }}
+                model={'BookInventory'}
+                preloads={['book', 'book_category', 'author', 'publisher', 'organization', 'book_images']}
+                search_queries={['d.name|c.name|b.title|a.code']}
+                join_statements={[{book: 'book'}, {author: 'author'}, {publisher: 'publisher'}]}
+                // buttons={[{ name: 'Approve', onclickFn: approveFn }]}
+                customCols={
+                    [
+                        {
+                            title: 'General',
+                            list: [
+                                'id',
+                   
+                                'code',
+                                'book.title',
+                                'book.price',
+                             
+                                'book.isbn',
+                                'book.call_no',
+                                {label: 'update_assoc.book', hidden: true , value: "true"},
+                                {label: 'book_image.img_url', upload: true},
+                                {
+                                    label: 'organization_id',
+                                    customCols: null,
+                                    selection: 'Organization',
+                                    search_queries: ['a.name'],
+                                    newData: 'name',
+                                    title_key: 'name'
+                                }
+
+                            ]
+                        },
+                        {
+                            title: 'Detail',
+                            list: [
+
+                            ]
+                        },
+                    ]
+                }
+                columns={[
+                    { label: 'Cover', data: 'img_url', through: ['book_images'], showImg: true },
+                    { label: 'Barcode', data: 'code' },
+                    { label: 'Title', data: 'title', through: ['book'] },
+                    { label: 'Category', data: 'name', through: ['book_category'] },
+                    { label: 'Price', data: 'price', through: ['book'] },
+                    { label: 'Author', data: 'name', through: ['author'] ,altClass: 'text-xs'},
+
+                    { label: 'Publisher', data: 'name', through: ['publisher'] ,altClass: 'text-xs' },
+
+
+
+
+                ]}
+
+
+            />
+        </div>
+    )
 }

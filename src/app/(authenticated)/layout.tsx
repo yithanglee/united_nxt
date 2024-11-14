@@ -61,7 +61,7 @@ const navGroups: NavGroup[] = [
     name: "System",
     items: [
       { name: "Settings", href: "/settings", icon: Settings },
-      { name: "Logout", href: "/login", icon: LogOut },
+
     ]
   }
 ]
