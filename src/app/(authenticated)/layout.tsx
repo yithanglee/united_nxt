@@ -70,7 +70,7 @@ const navGroups: NavGroup[] = [
   return (
     <ProtectedRoute>
       <div className="flex h-screen bg-gray-100">
-        <Sidebar navGroups={navGroups} sidebarTitle='United v3 Admin' />
+        <Sidebar navGroups={navGroups} sidebarTitle='PMC Library' sidebarSubtitle='Library management' />
         <div className="flex flex-col flex-1 overflow-hidden">
           <header className="bg-white shadow-sm z-10">
             <div className="max-w mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -83,7 +83,7 @@ const navGroups: NavGroup[] = [
               </Link>
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 overflow-y-auto p-0 lg:p-8">
             <div className='lg:bg-white p-0 lg:p-8 lg:shadow rounded'>
 
             

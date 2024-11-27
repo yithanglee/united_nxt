@@ -1,0 +1,31 @@
+ln -s ../next_src/lib lib
+ln -s ../next_src/hooks/ hooks
+ln -s ../next_src/context/ context
+
+ln -s ../../next_src/components/charts/ charts
+ln -s ../../next_src/components/data/ data
+ln -s ../../next_src/components/gridCells.tsx gridCells.tsx
+ln -s ../../next_src/components/ProtectedRoute.tsx ProtectedRoute.tsx
+ln -s ../../next_src/components/Sidebar.tsx Sidebar.tsx
+ln -s ../../next_src/components/RegisterServiceWorker.tsx RegisterServiceWorker.tsx
+
+
+ln -s ../../next_src/hooks/use-notifications.ts use-notifications.ts
+
+
+
+
+ln -s ../next_src/lib lib
+ln -s ../next_src/hooks/ hooks
+ln -s ../next_src/context/ context
+
+ln -s ../../next_src/components/charts/ charts
+ln -s ../../next_src/components/data/ data
+ln -s ../../next_src/components/gridCells.tsx gridCells.tsx
+ln -s ../../next_src/components/ProtectedRoute.tsx ProtectedRoute.tsx
+ln -s ../../next_src/components/Sidebar.tsx Sidebar.tsx
+ln -s ../../next_src/components/RegisterServiceWorker.tsx RegisterServiceWorker.tsx
+ln -s ../../next_src/components/FirebaseProvider.tsx FirebaseProvider.tsx
+
+
+ln -s ../../next_src/hooks/use-notifications.ts use-notifications.ts

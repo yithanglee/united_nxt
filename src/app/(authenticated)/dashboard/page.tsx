@@ -7,12 +7,12 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Check, X, BookOpen, User, RefreshCcw, Search, Plus, CornerDownLeft } from 'lucide-react'
+import { Check, X, BookOpen, User, RefreshCcw, Search, Plus, CornerDownLeft, Barcode } from 'lucide-react'
 import { PHX_ENDPOINT, PHX_HTTP_PROTOCOL } from '@/lib/constants'
 import { postData } from '@/lib/svt_utils'
 import DataTable from '@/components/data/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
+import BarcodeScanner from '@/components/data/barcodeScanner'
 interface Member {
   id: number;
   name: string;
@@ -77,6 +77,24 @@ export default function LibraryManagementSystem() {
 
   const { toast } = useToast()
   const url = `${PHX_HTTP_PROTOCOL}/${PHX_ENDPOINT}`
+
+
+
+  const [showScanner, setShowScanner] = useState<'book' | 'member' | null>(null)
+
+  const handleScan = (result: string) => {
+    if (showScanner === 'book') {
+      setBookCode(result)
+      searchBook()
+    } else if (showScanner === 'member') {
+      setMemberCode(result)
+      searchMember()
+    }
+    setShowScanner(null)
+  }
+
+
+
   const setBookCodeBtn = async function (e: any) {
     console.log(e.code)
     setBookCode(e.code)
@@ -306,7 +324,7 @@ export default function LibraryManagementSystem() {
   }, [])
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 ">
    
       <div>
         <h1 className="text-2xl font-bold mb-6">Library Management System</h1>
@@ -335,12 +353,14 @@ export default function LibraryManagementSystem() {
               <div>
                 <Label htmlFor="barcode">Books barcode</Label>
                 <div className="flex space-x-2">
-                  <Input id="barcode" name="barcode" value={bookCodeDom} 
-                  
-                  
-                  onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
+                  <Input 
+                    id="barcode" 
+                    name="barcode" 
+                    value={bookCodeDom} 
+                    onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
                   />
                   <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
+                  <Button onClick={() => setShowScanner('book')}><Barcode className="h-4 w-4 mr-2" /> Scan</Button>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -580,7 +600,14 @@ export default function LibraryManagementSystem() {
         </Tabs>
       </div>
 
-
+      {showScanner && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg w-full max-w-md">
+            <BarcodeScanner onScan={handleScan} scanType={showScanner} />
+            <Button onClick={() => setShowScanner(null)} className="mt-4 w-full">Close Scanner</Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
