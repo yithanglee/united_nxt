@@ -325,67 +325,12 @@ export default function LibraryManagementSystem() {
 
   return (
     <div className="container mx-auto p-4 ">
-   
-      <div>
-        <h1 className="text-2xl font-bold mb-6">Library Management System</h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="bg-primary text-primary-foreground">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-semibold">Loan</h2>
-                  <p>Process members loan</p>
-                </div>
-                <BookOpen className="h-6 w-6" />
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4 mt-4">
-              <div>
-                <Label htmlFor="member_code">Members barcode</Label>
-                <div className="flex space-x-2">
-                  <Input id="member_code" name="member_code" value={memberCodeDom} 
-                  
-                  onChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
-                  />
-                  <Button onClick={searchMember}><Search className="h-4 w-4 mr-2" /> Search</Button>
-                </div>
-              </div>
-              <div>
-                <Label htmlFor="barcode">Books barcode</Label>
-                <div className="flex space-x-2">
-                  <Input 
-                    id="barcode" 
-                    name="barcode" 
-                    value={bookCodeDom} 
-                    onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
-                  />
-                  <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
-                  <Button onClick={() => setShowScanner('book')}><Barcode className="h-4 w-4 mr-2" /> Scan</Button>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="loan_date">Loan Date</Label>
-                  <Input id="loan_date" name="loan_date" type="date" value={loanDate} onChange={(e) => setLoanDate(e.target.value)} />
-                </div>
-                <div>
-                  <Label htmlFor="return_date">Return Date</Label>
-                  <Input id="return_date" name="return_date" type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} />
-                </div>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                {canLoan !== null && (
-                  <div className={`flex items-center ${canLoan ? 'text-green-500' : 'text-red-500'}`}>
-                    {canLoan ? <Check className="h-6 w-6 mr-2" /> : <X className="h-6 w-6 mr-2" />}
-                    {loanMessage}
-                  </div>
-                )}
-                <Button onClick={processLoan} className="w-full" disabled={!canLoan}>Process Loan</Button>
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card>
+      <div>
+        <h1 className="text-2xl font-bold mb-6">PMC Library</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <Card>
             <CardContent className="mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className='col-span-2'>
@@ -437,6 +382,63 @@ export default function LibraryManagementSystem() {
                   )}
                 </div>
 
+              </div>
+            </CardContent>
+          </Card>
+
+
+          <Card>
+            <CardHeader className="bg-primary text-primary-foreground">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-semibold">Loan</h2>
+                  <p>Process members loan</p>
+                </div>
+                <BookOpen className="h-6 w-6" />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="member_code">Members barcode</Label>
+                <div className="flex space-x-2">
+                  <Input id="member_code" name="member_code" value={memberCodeDom}
+
+                    onChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
+                  />
+                  <Button onClick={searchMember}><Search className="h-4 w-4 mr-2" /> Search</Button>
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="barcode">Books barcode</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    id="barcode"
+                    name="barcode"
+                    value={bookCodeDom}
+                    onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
+                  />
+                  {/* <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button> */}
+                  <Button onClick={() => setShowScanner('book')}><Barcode className="h-4 w-4 mr-2" /> Scan</Button>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="loan_date">Loan Date</Label>
+                  <Input id="loan_date" name="loan_date" type="date" value={loanDate} onChange={(e) => setLoanDate(e.target.value)} />
+                </div>
+                <div>
+                  <Label htmlFor="return_date">Return Date</Label>
+                  <Input id="return_date" name="return_date" type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} />
+                </div>
+              </div>
+              <div className="flex flex-col items-center space-y-2">
+                {canLoan !== null && (
+                  <div className={`flex items-center ${canLoan ? 'text-green-500' : 'text-red-500'}`}>
+                    {canLoan ? <Check className="h-6 w-6 mr-2" /> : <X className="h-6 w-6 mr-2" />}
+                    {loanMessage}
+                  </div>
+                )}
+                <Button onClick={processLoan} className="w-full" disabled={!canLoan}>Process Loan</Button>
               </div>
             </CardContent>
           </Card>
@@ -495,7 +497,7 @@ export default function LibraryManagementSystem() {
               </CardHeader>
               <CardContent>
                 <DataTable
-                modelPath=''
+                  modelPath=''
                   model={'Member'}
                   preloads={['organization', 'group']}
                   buttons={[{ name: 'Use', onclickFn: setMemberCodeBtn }]}
@@ -600,14 +602,45 @@ export default function LibraryManagementSystem() {
         </Tabs>
       </div>
 
-      {showScanner && (
+      {/* {showScanner && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded-lg w-full max-w-md">
             <BarcodeScanner onScan={handleScan} scanType={showScanner} />
             <Button onClick={() => setShowScanner(null)} className="mt-4 w-full">Close Scanner</Button>
           </div>
         </div>
+      )} */}
+
+
+      {showScanner && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg w-full max-w-md">
+        
+              <div className="mb-4">
+                <Label htmlFor="book_code_scan">Book Code</Label>
+                <div className="flex space-x-2 mt-1">
+                  <Input
+                    id="book_code_scan"
+                    name="book_code_scan"
+                    value={bookCodeDom}
+                    onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
+                  />
+                  <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
+                </div>
+              </div>
+       
+            <BarcodeScanner
+              onScan={handleScan}
+              scanType={showScanner}
+              // memberCode={memberCodeDom}
+              // onMemberCodeChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
+              // onSearchMember={searchMember}
+            />
+            <Button onClick={() => setShowScanner(null)} className="mt-4 w-full">Close Scanner</Button>
+          </div>
+        </div>
       )}
+
     </div>
   )
 }
