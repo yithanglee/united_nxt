@@ -378,7 +378,7 @@ export default function LibraryManagementSystem() {
   }, [allOutstandingLoans, member, toast])
 
   return (
-    <div className="container mx-auto p-4 ">
+    <div className="container mx-auto ">
 
       <div>
         <h1 className="text-2xl font-bold mb-6">PMC Library</h1>
