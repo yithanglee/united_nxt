@@ -514,10 +514,13 @@ export default function LibraryManagementSystem() {
               </ScrollArea>
             </CardContent>
             <CardFooter>
+              <div className="flex flex-col gap-2 items-center justify-center w-full">
               <Button variant="outline" className="w-full">Outstanding Return: {allOutstandingLoans.length}</Button>
               <Button onClick={() => setShowReturnScanner(true)} className="w-full">
                 <Barcode className="h-4 w-4 mr-2" /> Scan to Return
               </Button>
+              </div>
+          
             </CardFooter>
           </Card>
         </div>
