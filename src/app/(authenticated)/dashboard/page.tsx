@@ -370,7 +370,7 @@ export default function LibraryManagementSystem() {
           setAllOutstandingLoans(updatedAllLoans)
         }
       } else {
-        toast({ title: "Error returning book", description: "Maybe book is already returned?", variant: "destructive" })
+        toast({ title: "Error returning book", description: "Maybe book is already returned?" })
       }
     } catch (error: any) {
       toast({ title: "Error returning book", description: error.message, variant: "destructive" })
