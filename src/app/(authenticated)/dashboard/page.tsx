@@ -322,6 +322,38 @@ export default function LibraryManagementSystem() {
     }
     fetchAllOutstandingLoans()
   }, [])
+  const [showReturnScanner, setShowReturnScanner] = useState<boolean>(false)
+
+  const handleReturnScan = useCallback(async (scanData: any) => {
+    try {
+      const result = await postData({
+        data: { scan_data: scanData },
+        endpoint: `${url}/svt_api/webhook?scope=return_book_by_scan`
+      })
+
+      console.log(result)
+      if (result.status === "received") {
+        toast({ title: "Book returned successfully" })
+        if (member) {
+          const loans = await fetch(`${url}/svt_api/webhook?scope=member_outstanding_loans&member_id=${member.id}`)
+          if (loans.ok) {
+            const updatedLoans = await loans.json()
+            setMemberOutstandingLoans(updatedLoans)
+          }
+        } else {
+          setMemberOutstandingLoans([])
+
+        }
+        const allLoans = await fetch(`${url}/svt_api/webhook?scope=all_outstanding_loans`)
+        if (allLoans.ok) {
+          const updatedAllLoans = await allLoans.json()
+          setAllOutstandingLoans(updatedAllLoans)
+        }
+      }
+    } catch (error: any) {
+      toast({ title: "Error returning book", description: error.message, variant: "destructive" })
+    }
+  }, [allOutstandingLoans, member, toast])
 
   return (
     <div className="container mx-auto p-4 ">
@@ -330,7 +362,7 @@ export default function LibraryManagementSystem() {
         <h1 className="text-2xl font-bold mb-6">PMC Library</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-        <Card>
+          <Card>
             <CardContent className="mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className='col-span-2'>
@@ -480,6 +512,9 @@ export default function LibraryManagementSystem() {
             </CardContent>
             <CardFooter>
               <Button variant="outline" className="w-full">Outstanding Return: {allOutstandingLoans.length}</Button>
+              <Button onClick={() => setShowReturnScanner(true)} className="w-full">
+                <Barcode className="h-4 w-4 mr-2" /> Scan to Return
+              </Button>
             </CardFooter>
           </Card>
         </div>
@@ -615,31 +650,46 @@ export default function LibraryManagementSystem() {
       {showScanner && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded-lg w-full max-w-md">
-        
-              <div className="mb-4">
-                <Label htmlFor="book_code_scan">Book Code</Label>
-                <div className="flex space-x-2 mt-1">
-                  <Input
-                    id="book_code_scan"
-                    name="book_code_scan"
-                    value={bookCodeDom}
-                    onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
-                  />
-                  <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
-                </div>
+
+            <div className="mb-4">
+              <Label htmlFor="book_code_scan">Book Code</Label>
+              <div className="flex space-x-2 mt-1">
+                <Input
+                  id="book_code_scan"
+                  name="book_code_scan"
+                  value={bookCodeDom}
+                  onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
+                />
+                <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
               </div>
-       
+            </div>
+
             <BarcodeScanner
               onScan={handleScan}
               scanType={showScanner}
-              // memberCode={memberCodeDom}
-              // onMemberCodeChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
-              // onSearchMember={searchMember}
+            // memberCode={memberCodeDom}
+            // onMemberCodeChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
+            // onSearchMember={searchMember}
             />
             <Button onClick={() => setShowScanner(null)} className="mt-4 w-full">Close Scanner</Button>
           </div>
         </div>
       )}
+      {showReturnScanner && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">Scan Book to Return</h3>
+            <BarcodeScanner
+              onScan={handleReturnScan}
+              scanType="book"
+            />
+            <Button onClick={() => setShowReturnScanner(false)} className="mt-4 w-full">
+              Close Scanner
+            </Button>
+          </div>
+        </div>
+      )}
+
 
     </div>
   )
