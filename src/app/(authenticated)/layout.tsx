@@ -60,7 +60,8 @@ const navGroups: NavGroup[] = [
   {
     name: "System",
     items: [
-      { name: "Settings", href: "/settings", icon: Settings },
+      { name: "Roles", href: "/roles", icon: Settings },
+      { name: "App Routes", href: "/app_routes", icon: Settings },
 
     ]
   }

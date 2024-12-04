@@ -20,9 +20,9 @@ export default function RootLayout({
     <html lang="en" style={{ overflow: 'hidden' }}>
       <body className={inter.className}>
         <AuthProvider>
-          <ProtectedRoute>
+        
             {children}
-          </ProtectedRoute>
+       
 
 
         </AuthProvider>
