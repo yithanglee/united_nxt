@@ -328,7 +328,10 @@ export default function LibraryManagementSystem() {
     try {
       const result = await postData({
         data: { scan_data: scanData },
-        endpoint: `${url}/svt_api/webhook?scope=return_book_by_scan`
+        endpoint: `${url}/svt_api/webhook?scope=return_book_by_scan`,
+        additionalHeaders: {
+          'phx-request': 'library.pioneercommunity.org.my'
+        }
       })
 
       console.log(result)
