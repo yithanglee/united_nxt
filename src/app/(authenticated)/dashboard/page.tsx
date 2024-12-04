@@ -369,6 +369,8 @@ export default function LibraryManagementSystem() {
           const updatedAllLoans = await allLoans.json()
           setAllOutstandingLoans(updatedAllLoans)
         }
+      } else {
+        toast({ title: "Error returning book", description: "Maybe book is already returned?", variant: "destructive" })
       }
     } catch (error: any) {
       toast({ title: "Error returning book", description: error.message, variant: "destructive" })
