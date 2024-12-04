@@ -82,10 +82,27 @@ export default function LibraryManagementSystem() {
 
   const [showScanner, setShowScanner] = useState<'book' | 'member' | null>(null)
 
-  const handleScan = (result: string) => {
+  const handleScan = async (result: string) => {
     if (showScanner === 'book') {
       setBookCode(result)
-      searchBook()
+      try {
+        const httpResult = await postData({
+          data: { barcode: result },
+          endpoint: `${url}/svt_api/webhook?scope=search_book`
+        })
+        if ( httpResult &&  httpResult.length == 0) {
+          toast({ title: "Book not found", variant: "destructive" })
+          return
+        }
+  
+        setBook( httpResult[0])
+        toast({ title: "Found book", description:  httpResult[0].book.title, variant: "default" })
+  
+  
+        console.log('finish searching book')
+      } catch (error: any) {
+        toast({ title: "Error searching book", description: error.message, variant: "destructive" })
+      }
     } else if (showScanner === 'member') {
       setMemberCode(result)
       searchMember()
