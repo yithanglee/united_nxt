@@ -85,7 +85,7 @@ const navGroups: NavGroup[] = [
             </div>
           </header>
           <main className="flex-1 overflow-y-auto p-0 lg:p-8">
-            <div className='lg:bg-white p-0 lg:p-8 lg:shadow rounded'>
+            <div className='lg:bg-white p-4 lg:p-8 lg:shadow rounded'>
 
             
             {children}
