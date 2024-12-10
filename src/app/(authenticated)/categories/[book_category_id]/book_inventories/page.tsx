@@ -31,10 +31,11 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
 
             <DataTable canDelete={true}
                 showNew={true}
-                appendQueries={{ book_category_id: book_category_id }}
+                // appendQueries={{ book_category_id: book_category_id }}
                 model={'BookInventory'}
                 preloads={['book', 'book_category', 'author', 'organization', 'book_images']}
-                search_queries={['b.name']}
+                search_queries={['b.title|a.book_category_id='+book_category_id]}
+                join_statements={[{book: 'book'}, {author: 'author'}, {publisher: 'publisher'}]}
                 // buttons={[{ name: 'Approve', onclickFn: approveFn }]}
                 customCols={
                     [
@@ -71,8 +72,9 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                     ]
                 }
                 columns={[
+                    { label: 'ID', data: 'id' },
                     { label: 'Cover', data: 'img_url', through: ['book_images'], showImg: true },
-                    { label: 'Barcode', data: 'code' },
+               
                     { label: 'Title', data: 'title', through: ['book'] },
                     { label: 'Category', data: 'name', through: ['book_category'] },
                     { label: 'Price', data: 'price', through: ['book'] },

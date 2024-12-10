@@ -49,6 +49,7 @@ export default function CategoriesPage() {
         showNew={true}
         model={'BookCategory'}
         preloads={['organization']}
+        join_statements={[{organization: 'organization'}]}
         buttons={[{ name: 'Books', onclickFn: approveFn, href: hrefFn }]}
         search_queries={['a.name']}
         customCols={

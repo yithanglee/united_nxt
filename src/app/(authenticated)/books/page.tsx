@@ -78,11 +78,7 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                     { label: 'Category', data: 'name', through: ['book_category'] },
                     { label: 'Price', data: 'price', through: ['book'] },
                     { label: 'Author', data: 'name', through: ['author'] ,altClass: 'text-xs'},
-
                     { label: 'Publisher', data: 'name', through: ['publisher'] ,altClass: 'text-xs' },
-
-
-
 
                 ]}
 
