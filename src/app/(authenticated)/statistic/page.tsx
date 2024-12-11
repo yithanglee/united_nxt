@@ -25,6 +25,11 @@ interface MemberJoinData {
     month: string
 }
 
+interface NewBookData {
+    count: number
+    month: string
+}
+
 interface StatData {
     currentYearTotal: number
     previousYearTotal: number
@@ -36,10 +41,12 @@ export default function StatisticsPage() {
     const years = Array.from({ length: 5 }, (_, i) => currentYear - i)
     const [selectedYear, setSelectedYear] = useState(currentYear.toString())
     const [memberJoinData, setMemberJoinData] = useState<MemberJoinData[]>([])
+    const [newBookData, setNewBookData] = useState<NewBookData[]>([])
     const [loanData, setLoanData] = useState<LoanData[]>([])
     const [categoryLoanData, setCategoryLoanData] = useState<CategoryLoanData[]>([])
     const [memberStats, setMemberStats] = useState<StatData>({ currentYearTotal: 0, previousYearTotal: 0, percentageChange: 0 })
     const [loanStats, setLoanStats] = useState<StatData>({ currentYearTotal: 0, previousYearTotal: 0, percentageChange: 0 })
+    const [newBookStats, setNewBookStats] = useState<StatData>({ currentYearTotal: 0, previousYearTotal: 0, percentageChange: 0 })
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -48,25 +55,45 @@ export default function StatisticsPage() {
             setIsLoading(true)
             setError(null)
             try {
-                const [memberJoinResponse, memberJoinPreviousResponse, loanResponse, loanPreviousResponse, categoryResponse] = await Promise.all([
+                const [memberJoinResponse, memberJoinPreviousResponse, 
+                    
+                    
+                    newBookResponse,
+                    newBookPreviousResponse,
+                    
+                    
+                    loanResponse, loanPreviousResponse, categoryResponse] = await Promise.all([
                     fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=member_join_by_month&year=${selectedYear}`),
                     fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=member_join_by_month&year=${parseInt(selectedYear) - 1}`),
+
+                    fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=new_books_by_month&year=${selectedYear}`),
+                    fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=new_books_by_month&year=${parseInt(selectedYear) - 1}`),
+
+
                     fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=loan_history_by_month&year=${selectedYear}`),
                     fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=loan_history_by_month&year=${parseInt(selectedYear) - 1}`),
                     fetch(`${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}/svt_api/webhook?scope=statistic&title=loan_history_by_category_month&year=${selectedYear}`)
                 ])
 
-                if (!memberJoinResponse.ok || !memberJoinPreviousResponse.ok || !loanResponse.ok || !loanPreviousResponse.ok || !categoryResponse.ok) {
+                if (!memberJoinResponse.ok || !memberJoinPreviousResponse.ok || !loanResponse.ok || !loanPreviousResponse.ok || !categoryResponse.ok || !newBookResponse.ok || !newBookPreviousResponse.ok) {
                     throw new Error('Failed to fetch data')
                 }
 
                 const memberJoinData = await memberJoinResponse.json()
                 const memberJoinPreviousData = await memberJoinPreviousResponse.json()
+
+                const newBookData = await newBookResponse.json()
+                const newBookPreviousData = await newBookPreviousResponse.json()
+
                 const loanData = await loanResponse.json()
                 const loanPreviousData = await loanPreviousResponse.json()
                 const categoryData = await categoryResponse.json()
 
                 setMemberJoinData(memberJoinData)
+
+
+                setNewBookData(newBookData)
+
                 setLoanData(loanData)
                 setCategoryLoanData(categoryData)
 
@@ -82,6 +109,22 @@ export default function StatisticsPage() {
                     previousYearTotal: previousYearMemberTotal,
                     percentageChange: memberPercentageChange
                 })
+
+
+                // calculate new book stats
+                const currentYearNewBookTotal = newBookData.reduce((sum: any, item: { count: any }) => sum + item.count, 0)
+                const previousYearNewBookTotal = newBookPreviousData.reduce((sum: any, item: { count: any }) => sum + item.count, 0)
+                const newBookPercentageChange = previousYearNewBookTotal !== 0
+                    ? ((currentYearNewBookTotal - previousYearNewBookTotal) / previousYearNewBookTotal) * 100
+                    : 0
+
+                setNewBookStats({
+                    currentYearTotal: currentYearNewBookTotal,
+                    previousYearTotal: previousYearNewBookTotal,
+                    percentageChange: newBookPercentageChange
+                })
+
+
 
                 // Calculate loan stats
                 const currentYearLoanTotal = loanData.reduce((sum: any, item: { count: any }) => sum + item.count, 0)
@@ -171,8 +214,21 @@ export default function StatisticsPage() {
                                     </p>
                                 </CardContent>
                             </Card>
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Total New Books</CardTitle>
+                                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{newBookStats.currentYearTotal}</div>
+                                    <p className="text-xs text-muted-foreground">
+                                        {newBookStats.percentageChange >= 0 ? '+' : ''}
+                                        {newBookStats.percentageChange.toFixed(1)}% from last year
+                                    </p>
+                                </CardContent>
+                            </Card>
                         </div>
-                        <div className='grid grid-cols-6 gap-4'>
+                        <div className='grid grid-cols-12 gap-4'>
                             <MemberJoinChart
                                 title={'Member Joins by Month'}
                                 subtitle={'Number of new members joining each month'}
@@ -183,6 +239,12 @@ export default function StatisticsPage() {
                                 title={'Loans by Month'}
                                 subtitle={'Number of new loans each month'}
                                 data={loanData}
+                                year={selectedYear}
+                            />
+                            <MemberJoinChart
+                                title={'New Books by Month'}
+                                subtitle={'Number of new books each month'}
+                                data={newBookData}
                                 year={selectedYear}
                             />
                         </div>
