@@ -41,7 +41,7 @@ const navGroups: NavGroup[] = [
       { name: "Books", href: "/books", icon: BookOpen },
       { name: "Authors", href: "/authors", icon: Users },
       { name: "Publishers", href: "/publishers", icon: Building },
-      { name: "Tags", href: "/tags", icon: Tag },
+      { name: "BookSources", href: "/book_sources", icon: Tag },
       { name: "Categories", href: "/categories", icon: FolderOpen },
       { name: "Scan", href: "/scan", icon: FileScan },
       { name: "Upload", href: "/upload", icon: CloudUpload },

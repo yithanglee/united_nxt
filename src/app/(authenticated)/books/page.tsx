@@ -33,7 +33,7 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                 showNew={true}
                 // appendQueries={{ book_category_id: book_category_id }}
                 model={'BookInventory'}
-                preloads={['book', 'book_category', 'author', 'publisher', 'organization', 'book_images']}
+                preloads={['book', 'book_category', 'author', 'publisher', 'organization', 'book_images', 'book_source']}
                 search_queries={['d.name|c.name|b.title|a.code']}
                 join_statements={[{book: 'book'}, {author: 'author'}, {publisher: 'publisher'}]}
                 // buttons={[{ name: 'Approve', onclickFn: approveFn }]}
@@ -78,6 +78,7 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                     { label: 'Category', data: 'name', through: ['book_category'] },
                     { label: 'Price', data: 'price', through: ['book'] },
                     { label: 'Author', data: 'name', through: ['author'] ,altClass: 'text-xs'},
+                    { label: 'Sources', data: 'name', through: ['book_source'] ,altClass: 'text-xs'},
                     { label: 'Publisher', data: 'name', through: ['publisher'] ,altClass: 'text-xs' },
 
                 ]}
