@@ -50,8 +50,19 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                              
                                 'book.isbn',
                                 'book.call_no',
+                                // 'book_source.name',
                                 {label: 'update_assoc.book', hidden: true , value: "true"},
+                                // {label: 'update_assoc.book_source', hidden: true , value: "true"},
                                 {label: 'book_image.img_url', upload: true},
+                               
+                                {
+                                    label: 'book_source_id',
+                                    customCols: null,
+                                    selection: 'BookSource',
+                                    search_queries: ['a.name'],
+                                    newData: 'name',
+                                    title_key: 'name'
+                                },
                                 {
                                     label: 'organization_id',
                                     customCols: null,
