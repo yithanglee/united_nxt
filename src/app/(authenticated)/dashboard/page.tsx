@@ -74,6 +74,8 @@ export default function LibraryManagementSystem() {
   const [allOutstandingLoans, setAllOutstandingLoans] = useState<Loan[]>([]);
   const [canLoan, setCanLoan] = useState<boolean | null>(null);
   const [loanMessage, setLoanMessage] = useState<string>('');
+  const [showMemberModal, setShowMemberModal] = useState(false);
+  const [memberSearchResults, setMemberSearchResults] = useState<Member[]>([]);
 
   const { toast } = useToast()
   const url = `${PHX_HTTP_PROTOCOL}/${PHX_ENDPOINT}`
@@ -267,6 +269,9 @@ export default function LibraryManagementSystem() {
           setAllOutstandingLoans(updatedAllLoans)
         }
       }
+      if (result.status === "error") {
+        toast({ title: "Error processing loan", description: result.reason, variant: "destructive" })
+      }
     } catch (error: any) {
       toast({ title: "Error processing loan", description: error.message, variant: "destructive" })
     }
@@ -377,14 +382,63 @@ export default function LibraryManagementSystem() {
     }
   }, [allOutstandingLoans, member, toast])
 
+  const searchMemberByName = async () => {
+    const memberName = document.querySelector<HTMLInputElement>('input[name="member_code"]')?.value
+    if (!memberName) {
+      toast({ title: "Please enter a member name", variant: "destructive" })
+      return
+    }
+    try {
+      const result = await postData({
+        data: { member_name: memberName },
+        endpoint: `${url}/svt_api/webhook?scope=search_member_by_name`
+      })
+      if (result && result.length === 0) {
+        toast({ title: "Member not found", variant: "destructive" })
+        return
+      }
+      if (result.length === 1) {
+        setMemberCode(result[0].code)
+        setMember(result[0])
+        let response = await fetch(`${url}/svt_api/webhook?scope=member_outstanding_loans&member_id=${result[0].id}`)
+        if (response.ok) {
+          const loans = await response.json()
+          setMemberOutstandingLoans(loans)
+          setLoanDate(new Date().toISOString().split('T')[0])
+          setReturnDate(new Date(Date.now() + result[0].group.loan_period * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
+        }
+        toast({ title: "Found member", description: result[0].name, variant: "default" })
+      } else {
+        setMemberSearchResults(result)
+        setShowMemberModal(true)
+      }
+    } catch (error: any) {
+      toast({ title: "Error searching member", description: error.message, variant: "destructive" })
+    }
+  }
+
+  const selectMember = async (selectedMember: Member) => {
+    setMemberCode(selectedMember.code)
+    setMember(selectedMember)
+    let response = await fetch(`${url}/svt_api/webhook?scope=member_outstanding_loans&member_id=${selectedMember.id}`)
+    if (response.ok) {
+      const loans = await response.json()
+      setMemberOutstandingLoans(loans)
+      setLoanDate(new Date().toISOString().split('T')[0])
+      setReturnDate(new Date(Date.now() + selectedMember.group.loan_period * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
+    }
+    toast({ title: "Selected member", description: selectedMember.name, variant: "default" })
+    setShowMemberModal(false)
+  }
+
   return (
     <div className="container mx-auto ">
 
       <div>
         <h1 className="text-2xl font-bold mb-6">PMC Library</h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-          <Card>
+          <Card className='col-span-1'>
             <CardContent className="mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className='col-span-2'>
@@ -441,7 +495,7 @@ export default function LibraryManagementSystem() {
           </Card>
 
 
-          <Card>
+          <Card className='col-span-2'>
             <CardHeader className="bg-primary text-primary-foreground">
               <div className="flex justify-between items-center">
                 <div>
@@ -456,10 +510,10 @@ export default function LibraryManagementSystem() {
                 <Label htmlFor="member_code">Members barcode</Label>
                 <div className="flex space-x-2">
                   <Input id="member_code" name="member_code" value={memberCodeDom}
-
                     onChange={(e) => handleMemberInputChange(memberCodeDom, e.target.value)}
                   />
                   <Button onClick={searchMember}><Search className="h-4 w-4 mr-2" /> Search</Button>
+                  <Button onClick={searchMemberByName} variant="outline"><User className="h-4 w-4 mr-2" /> By Name</Button>
                 </div>
               </div>
               <div>
@@ -471,7 +525,7 @@ export default function LibraryManagementSystem() {
                     value={bookCodeDom}
                     onChange={(e) => handleBookInputChange(bookCodeDom, e.target.value)}
                   />
-                  {/* <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button> */}
+                  <Button onClick={searchBook}><Search className="h-4 w-4 mr-2" /> Search</Button>
                   <Button onClick={() => setShowScanner('book')}><Barcode className="h-4 w-4 mr-2" /> Scan</Button>
                 </div>
               </div>
@@ -497,7 +551,7 @@ export default function LibraryManagementSystem() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className='col-span-2'>
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
@@ -715,6 +769,29 @@ export default function LibraryManagementSystem() {
         </div>
       )}
 
+      {showMemberModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">Select Member</h3>
+            <ScrollArea className="h-[300px]">
+              {memberSearchResults.map((searchMember) => (
+                <div
+                  key={searchMember.id}
+                  className="flex justify-between items-center mb-2 p-2 bg-muted rounded hover:bg-accent cursor-pointer"
+                  onClick={() => selectMember(searchMember)}
+                >
+                  <div>
+                    <p className="font-medium">{searchMember.name}</p>
+                    <p className="text-sm text-muted-foreground">Code: {searchMember.code}</p>
+                  </div>
+                  <Button size="sm" variant="ghost"><CornerDownLeft className="h-4 w-4" /></Button>
+                </div>
+              ))}
+            </ScrollArea>
+            <Button onClick={() => setShowMemberModal(false)} className="mt-4 w-full">Close</Button>
+          </div>
+        </div>
+      )}
 
     </div>
   )
