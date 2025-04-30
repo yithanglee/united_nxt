@@ -1,7 +1,10 @@
 'use client';
 import DataTable from "@/components/data/table"
+import { Button } from "@/components/ui/button";
+import { Download, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { PHX_ENDPOINT, PHX_HTTP_PROTOCOL } from "@/lib/constants";
 export default function PaymentsPage({ params }: { params: { book_category_id: string } }) {
     const [data, setData] = useState<any[]>([]);
     console.log(data)
@@ -21,11 +24,22 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
     }
 
 
+    function downloadBooks(event: React.MouseEvent<HTMLButtonElement>): void {
+        const admin_url = PHX_HTTP_PROTOCOL + PHX_ENDPOINT
+        window.open(admin_url + '/admin/csv?type=books', '_blank');
+    }
+
     return (
         <div className="space-y-6">
+
+
+
             <div className="flex justify-between items-center">
                 <h2 className="text-3xl font-bold tracking-tight">Inventories</h2>
+                <Button variant="secondary" onClick={downloadBooks}>
 
+                    <Download className="w-4 h-4 mr-2"></Download>
+                    Download Books</Button>
             </div>
 
 
@@ -35,7 +49,7 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                 model={'BookInventory'}
                 preloads={['book', 'book_category', 'author', 'publisher', 'organization', 'book_images', 'book_source']}
                 search_queries={['d.name|c.name|b.title|a.code']}
-                join_statements={[{book: 'book'}, {author: 'author'}, {publisher: 'publisher'}]}
+                join_statements={[{ book: 'book' }, { author: 'author' }, { publisher: 'publisher' }]}
                 // buttons={[{ name: 'Approve', onclickFn: approveFn }]}
                 customCols={
                     [
@@ -43,18 +57,18 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                             title: 'General',
                             list: [
                                 'id',
-                   
+
                                 'code',
                                 'book.title',
                                 'book.price',
-                             
+
                                 'book.isbn',
                                 'book.call_no',
                                 // 'book_source.name',
-                                {label: 'update_assoc.book', hidden: true , value: "true"},
+                                { label: 'update_assoc.book', hidden: true, value: "true" },
                                 // {label: 'update_assoc.book_source', hidden: true , value: "true"},
-                                {label: 'book_image.img_url', upload: true},
-                               
+                                { label: 'book_image.img_url', upload: true },
+
                                 {
                                     label: 'book_source_id',
                                     customCols: null,
@@ -88,9 +102,9 @@ export default function PaymentsPage({ params }: { params: { book_category_id: s
                     { label: 'Title', data: 'title', through: ['book'] },
                     { label: 'Category', data: 'name', through: ['book_category'] },
                     { label: 'Price', data: 'price', through: ['book'] },
-                    { label: 'Author', data: 'name', through: ['author'] ,altClass: 'text-xs'},
-                    { label: 'Sources', data: 'name', through: ['book_source'] ,altClass: 'text-xs'},
-                    { label: 'Publisher', data: 'name', through: ['publisher'] ,altClass: 'text-xs' },
+                    { label: 'Author', data: 'name', through: ['author'], altClass: 'text-xs' },
+                    { label: 'Sources', data: 'name', through: ['book_source'], altClass: 'text-xs' },
+                    { label: 'Publisher', data: 'name', through: ['publisher'], altClass: 'text-xs' },
 
                 ]}
 
