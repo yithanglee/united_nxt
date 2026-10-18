@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { LockIcon, MailIcon } from 'lucide-react'
 import { useLogin } from '@/lib/useLogin'
+import { useAuth } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
 import { useToast } from "@/hooks/use-toast"
 
 interface TurnstileInstance {
@@ -28,32 +30,59 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState('')
   const turnstileWidgetId = useRef<string>()
   const { handleLogin, error } = useLogin()
+  const { user, isLoading: authLoading } = useAuth()
+  const router = useRouter()
   const { toast } = useToast()
 
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push('/dashboard')
+    }
+  }, [user, authLoading, router])
+
   const resetTurnstile = useCallback(() => {
-    if (window.turnstile && turnstileWidgetId.current) {
-      window.turnstile.reset(turnstileWidgetId.current)
+    setTurnstileToken('')
+    if (window.turnstile) {
+      try {
+        if (turnstileWidgetId.current) {
+          window.turnstile.reset(turnstileWidgetId.current)
+        } else {
+          window.turnstile.reset()
+        }
+      } catch (err) {
+        console.warn('Turnstile reset error:', err)
+      }
     }
   }, [])
 
   const initTurnstile = useCallback(() => {
     const turnstileContainer = document.getElementById('cf-turnstile')
     if (window.turnstile && turnstileContainer && !turnstileWidgetId.current) {
-      turnstileWidgetId.current = window.turnstile.render(turnstileContainer, {
-        sitekey:  '0x4AAAAAAAz-_sGAaRbcy8Ks',
-        callback: (token: string) => {
-          console.log('Turnstile callback received')
-        },
-        'error-callback': () => {
-          toast({
-            title: "Verification Error",
-            description: "Failed to load verification challenge. Please refresh the page.",
-            variant: "destructive",
-          })
-        }
-      })
+      try {
+        turnstileWidgetId.current = window.turnstile.render(turnstileContainer, {
+          sitekey: '0x4AAAAAAAz-_sGAaRbcy8Ks',
+          callback: (token: string) => {
+            setTurnstileToken(token)
+          },
+          'expired-callback': () => {
+            setTurnstileToken('')
+          },
+          'error-callback': () => {
+            setTurnstileToken('')
+            toast({
+              title: "Verification Error",
+              description: "Failed to load verification challenge. Please refresh the page.",
+              variant: "destructive",
+            })
+          }
+        })
+      } catch (err) {
+        console.warn('Turnstile render warning:', err)
+      }
     }
   }, [toast])
 
@@ -70,7 +99,10 @@ export default function LoginPage() {
     return () => {
       // Cleanup turnstile widget when component unmounts
       if (window.turnstile && turnstileWidgetId.current) {
-        window.turnstile.remove(turnstileWidgetId.current)
+        try {
+          window.turnstile.remove(turnstileWidgetId.current)
+        } catch {}
+        turnstileWidgetId.current = undefined
       }
     }
   }, [handleTurnstileLoad])
@@ -80,9 +112,13 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const token = window.turnstile?.getResponse(turnstileWidgetId.current)
+      const activeToken =
+        turnstileToken ||
+        (turnstileWidgetId.current ? window.turnstile?.getResponse(turnstileWidgetId.current) : undefined) ||
+        window.turnstile?.getResponse() ||
+        ''
       
-      if (!token) {
+      if (!activeToken) {
         toast({
           title: "Verification Required",
           description: "Please complete the verification challenge.",
@@ -92,7 +128,7 @@ export default function LoginPage() {
         return
       }
 
-      await handleLogin(email, password, token)
+      await handleLogin(email, password, activeToken)
     } catch (error) {
       console.error('Login error:', error)
       toast({
@@ -109,7 +145,7 @@ export default function LoginPage() {
   return (
     <>
       <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         async
         defer
         onLoad={handleTurnstileLoad}
@@ -153,7 +189,7 @@ export default function LoginPage() {
                 </div>
               </div>
               {error && <p className="text-red-500 text-sm">{error}</p>}
-              <div id="cf-turnstile" className="cf-turnstile"></div>
+              <div id="cf-turnstile"></div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>

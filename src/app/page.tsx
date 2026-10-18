@@ -2,8 +2,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookOpen, Users, BarChart3, Clock, DollarSign } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
 
 export default function LandingPage() {
+  const { user } = useAuth()
   return (
     <div style={{
       height: '100vh',
@@ -28,8 +30,8 @@ export default function LandingPage() {
             <Link className="hidden text-sm font-medium hover:underline underline-offset-4" href="#pricing">
               Pricing
             </Link>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="/login">
-              Login
+            <Link className="text-sm font-medium hover:underline underline-offset-4" href={user ? "/dashboard" : "/login"}>
+              {user ? "Dashboard" : "Login"}
             </Link>
           </nav>
         </header>
@@ -46,7 +48,9 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="space-x-4">
-                  <Button>Get Started</Button>
+                  <Link href={user ? "/dashboard" : "/login"}>
+                    <Button>{user ? "Go to Dashboard" : "Get Started"}</Button>
+                  </Link>
                   <Button variant="outline">Learn More</Button>
                 </div>
               </div>

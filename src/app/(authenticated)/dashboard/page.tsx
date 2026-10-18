@@ -78,7 +78,7 @@ export default function LibraryManagementSystem() {
   const [memberSearchResults, setMemberSearchResults] = useState<Member[]>([]);
 
   const { toast } = useToast()
-  const url = `${PHX_HTTP_PROTOCOL}/${PHX_ENDPOINT}`
+  const url = `${PHX_HTTP_PROTOCOL}${PHX_ENDPOINT}`
 
 
 
