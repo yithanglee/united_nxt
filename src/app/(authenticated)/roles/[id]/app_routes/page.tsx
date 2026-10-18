@@ -33,7 +33,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
     socket.connect()
 
     const fetchColInputs = async () => {
-        const inputs = await genInputs(url, 'Device');
+        const inputs = await genInputs(url, 'AppRoute');
         setColInputs(inputs);
     };
 
@@ -74,7 +74,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         console.log(filteredResult)
         if (filteredResult) {
             setFilteredData(filteredResult)
-            setTitle((filteredResult.outlet ? filteredResult.outlet.name : '') + ' Device');
+            setTitle((filteredResult.role ? filteredResult.role.name : '') + ' App Routes');
             setSubtitle(filteredResult.name);
 
         }
@@ -97,7 +97,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
                         appendQueries={{ role_id: id }}
                         model={'RoleAppRoute'}
                         preloads={['app_route']}
-                        // search_queries={['a.uuid']}
+                        search_queries={['a.role_id='+id]}
                         customCols={
                             [
                                 {
